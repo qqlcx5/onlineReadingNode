@@ -7,8 +7,8 @@ const https = require('https')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 // https签名
-const privateKey = fs.readFileSync('./https/3876613_liaocx.design.key', 'utf8')
-const certificate = fs.readFileSync('./https/3876613_liaocx.design.pem', 'utf8')
+const privateKey = fs.readFileSync('./https/3877184_liaocx.design.key', 'utf8')
+const certificate = fs.readFileSync('./https/3877184_liaocx.design.pem', 'utf8')
 const credentials = { key: privateKey, cert: certificate }
 const httpsServer = https.createServer(credentials, app)
 
