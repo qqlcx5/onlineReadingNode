@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Result = require('../models/Result');
-const { login } = require('../services/user');
+const { login,findUser } = require('../services/user');
 const { md5,decode } = require('../utils/index');
 const { PWD_SALT } = require('../utils/constant');
 const { body, validationResult } = require('express-validator');

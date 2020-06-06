@@ -7,7 +7,7 @@ function login(username, password) {
 }
 
 function findUser(username) {
-  const sql = `select * from admin_user where username='${username}'`
+  const sql = `select id,username,nickname,role,avatar from admin_user where username='${username}'`
   return queryOne(sql)
 }
 module.exports = {
