@@ -2,6 +2,7 @@ const {
   MIME_TYPE_EPUB,
   UPLOAD_PATH,
   UPLOAD_URL,
+
 } = require('../utils/constant');
 const Epub = require('../utils/epub');
 
@@ -49,6 +50,7 @@ class Book {
     this.publisher = ''; // 出版社
     this.contents = []; // 目录
     this.cover = ''; // 封面图片URL
+    this.coverPath = ''; // 封面图片URL
     this.category = -1; // 分类ID
     this.categoryText = ''; // 分类名称
     this.language = ''; // 语种
@@ -73,11 +75,41 @@ class Book {
         if (err) {
           reject(err);
         } else {
-          console.log(epub.metadata);
-          resolve();
+          let {
+            title,
+            language,
+            creator,
+            creatorFileAs,
+            publisher,
+            cover,
+          } = epub.metadata;
+          // title = ''
+          if (!title) {
+            reject(new Error('图书标题为空'));
+          } else {
+            this.title = title;
+            this.language = language || 'en';
+            this.author = creator || creatorFileAs || 'unknown';
+            this.publisher = publisher || 'unknown';
+            this.rootFile = epub.rootFile;
+            const handleGetImage = (error, imgBuffer, mimeType) => {
+              if (error) {
+                reject(error);
+              } else {
+                const suffix = mimeType.split('/')[1];
+                const coverPath = `${UPLOAD_PATH}/img/${this.fileName}.${suffix}`;
+                const coverUrl = `${UPLOAD_URL}/img/${this.fileName}.${suffix}`;
+                fs.writeFileSync(coverPath, imgBuffer, 'binary');
+                this.coverPath = `/img/${this.fileName}.${suffix}`;
+                this.cover = coverUrl;
+                resolve(this);
+              }
+            };
+            epub.getImage(cover, handleGetImage)
+          }
         }
       });
-      epub.parse()
+      epub.parse();
     });
   }
 }
